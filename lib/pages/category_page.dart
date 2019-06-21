@@ -97,7 +97,6 @@ class LeftCategoryNavState extends State<LeftCategoryNav> {
     );
   }
 
-
   void _getCategory() async {
     await request('getCategory').then((val) {
       var data = json.decode(val.toString());
