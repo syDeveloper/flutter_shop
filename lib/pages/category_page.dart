@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:flutter_shop/bean/category_bean_entity.dart';
+import 'package:flutter_shop/provide/child_caategory.dart';
 import 'package:flutter_shop/service/service_method.dart';
+import 'package:provide/provide.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -32,18 +34,22 @@ class _CategoryPageState extends State<CategoryPage> {
         child: Row(
           children: <Widget>[
             LeftCategoryNav(),
+            Column(
+              children: <Widget>[
+                RightCategoryNav(),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
-
-
 }
 
+/**
+ * 左侧菜单
+ */
 class LeftCategoryNav extends StatefulWidget {
-
-
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -53,6 +59,7 @@ class LeftCategoryNav extends StatefulWidget {
 
 class LeftCategoryNavState extends State<LeftCategoryNav> {
   List<CategoryBeanData> categoryList = [];
+  var listIndex = 0;
 
   @override
   void initState() {
@@ -80,13 +87,23 @@ class LeftCategoryNavState extends State<LeftCategoryNav> {
   }
 
   Widget _leftInkWell(int index) {
+    bool isClick = false;
+    isClick = (index == listIndex) ? true : false;
+
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        setState(() {
+          listIndex = index;
+        });
+        //左侧点击
+        var childList = categoryList[index].bxMallSubDto;
+        Provide.value<ChildCategory>(context).getChildCategory(childList);
+      },
       child: Container(
         height: ScreenUtil().setHeight(100),
         padding: EdgeInsets.only(left: 10, top: 20),
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: isClick ? Color.fromRGBO(236, 236, 236, 1) : Colors.white,
             border:
                 Border(bottom: BorderSide(width: 1, color: Colors.black12))),
         child: Text(
@@ -104,6 +121,57 @@ class LeftCategoryNavState extends State<LeftCategoryNav> {
       setState(() {
         categoryList = categoryBeanEntity.data;
       });
+      //默认选中第一个
+      Provide.value<ChildCategory>(context)
+          .getChildCategory(categoryList[0].bxMallSubDto);
     });
+  }
+}
+
+class RightCategoryNav extends StatefulWidget {
+  @override
+  _RightCategoryNavState createState() {
+    return _RightCategoryNavState();
+  }
+}
+
+class _RightCategoryNavState extends State<RightCategoryNav> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Provide<ChildCategory>(builder: (context, child, childCategory) {
+      return Container(
+        height: ScreenUtil().setHeight(80),
+        width: ScreenUtil().setWidth(570),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+              bottom: BorderSide(
+            color: Colors.black12,
+            width: 1,
+          )),
+        ),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: childCategory.childCategoryList.length,
+          itemBuilder: (context, index) {
+            return _rightInWell(childCategory.childCategoryList[index]);
+          },
+        ),
+      );
+    });
+  }
+
+  Widget _rightInWell(CategoryBeanDataBxmallsubdto item) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        padding: EdgeInsets.fromLTRB(5, 15, 5, 10),
+        child: Text(
+          item.mallSubName,
+          style: TextStyle(fontSize: ScreenUtil().setSp(28)),
+        ),
+      ),
+    );
   }
 }
