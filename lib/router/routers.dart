@@ -7,11 +7,17 @@ class Routers {
   static String root = '/root';
   static String detailsPage = '/detail';
 
+  static String mapPage = '/map';
+
   static void configureRoutes(Router router) {
     router.notFoundHandler = Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       print("error!route not found!");
     });
+
+
     router.define(detailsPage, handler: detailsHandler);
+    router.define(mapPage, handler: mapHandler);
+
   }
 }

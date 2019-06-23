@@ -4,6 +4,7 @@ import 'package:provide/provide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_shop/provide/cart.dart';
+import 'package:flutter_shop/provide/currentIndex.dart';
 
 class DetailBottom extends StatelessWidget {
   @override
@@ -21,17 +22,49 @@ class DetailBottom extends StatelessWidget {
       height: ScreenUtil().setHeight(80),
       child: Row(
         children: <Widget>[
-          InkWell(
-            onTap: () {},
-            child: Container(
-              width: ScreenUtil().setWidth(110),
-              alignment: Alignment.center,
-              child: Icon(
-                Icons.shopping_cart,
-                size: 35,
-                color: Colors.red,
+          Stack(
+            children: <Widget>[
+              InkWell(
+                onTap: () {
+                  Provide.value<CurrentIndexProvide>(context).changeIndex(2);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: ScreenUtil().setWidth(110),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.shopping_cart,
+                    size: 35,
+                    color: Colors.red,
+                  ),
+                ),
               ),
-            ),
+              Provide<CartProvide>(
+                builder: (context, child, val) {
+                  int goodsCount =
+                      Provide.value<CartProvide>(context).allGoodCount;
+                  return Positioned(
+                    top: 0,
+                    right: 10,
+                    child: Container(
+                      child: Text(
+                        '${goodsCount}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: ScreenUtil().setSp(12),
+                        ),
+                      ),
+                      padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
+                      decoration: BoxDecoration(
+                        color: Colors.pink,
+                        border: Border.all(width: 2, color: Colors.white),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           InkWell(
             onTap: () async {
@@ -50,7 +83,7 @@ class DetailBottom extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: ()async {
+            onTap: () async {
               await Provide.value<CartProvide>(context).remove();
             },
             child: Container(
@@ -58,7 +91,7 @@ class DetailBottom extends StatelessWidget {
               width: ScreenUtil().setWidth(320),
               alignment: Alignment.center,
               child: Text(
-                "加入购物车",
+                "立即购买",
                 style: TextStyle(
                     color: Colors.white, fontSize: ScreenUtil().setSp(28)),
               ),
