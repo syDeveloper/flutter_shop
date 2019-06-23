@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter_shop/pages/detail_page/detail_bottom.dart';
 import 'package:flutter_shop/pages/detail_page/detail_explain.dart';
+import 'package:flutter_shop/pages/detail_page/detail_tabbar.dart';
+import 'package:flutter_shop/pages/detail_page/detail_web.dart';
 import 'package:flutter_shop/provide/detail_info.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_shop/pages/detail_page/detail_top_area.dart';
@@ -26,13 +29,24 @@ class DetailsPage extends StatelessWidget {
           future: _getGoodsDetailInfo(context),
           builder: (context,snapshot){
         if(snapshot.hasData){
-          return Container(
-            child: Column(
-              children: <Widget>[
-                DetailTopArea(),
-                DetailExplain(),
-              ],
-            ),
+          return Stack(
+            children: <Widget>[
+              Container(
+                child: ListView(
+                  children: <Widget>[
+                    DetailTopArea(),
+                    DetailExplain(),
+                    DetailTabBar(),
+                    DetailWeb(),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child:DetailBottom(),
+              ),
+            ],
           );
         }else{
           return Text("loading");

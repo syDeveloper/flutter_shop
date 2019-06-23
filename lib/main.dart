@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/pages/index_page.dart';
+import 'package:flutter_shop/provide/cart.dart';
 import 'package:flutter_shop/provide/category_goods_list_provide.dart';
 import 'package:flutter_shop/provide/detail_info.dart';
 import 'package:flutter_shop/router/routers.dart';
@@ -17,6 +18,7 @@ void main() {
   var childCategory = ChildCategory();
   var categoryGoodsListProvide = CategoryGoodsListProvide();
   var detailInfoProvide = DetailsInfoProvide();
+  var cartProvide = CartProvide();
 
   var providers = Providers();
 
@@ -25,7 +27,8 @@ void main() {
     ..provide(Provider<ChildCategory>.value(childCategory))
     ..provide(
         Provider<CategoryGoodsListProvide>.value(categoryGoodsListProvide))
-    ..provide(Provider<DetailsInfoProvide>.value(detailInfoProvide));
+    ..provide(Provider<DetailsInfoProvide>.value(detailInfoProvide))
+    ..provide(Provider<CartProvide>.value(cartProvide));
 
   runApp(ProviderNode(
     child: MyApp(),
@@ -36,7 +39,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     final router = Router();
     Routers.configureRoutes(router);
     Application.router = router;

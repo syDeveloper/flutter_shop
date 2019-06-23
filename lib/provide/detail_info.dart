@@ -6,13 +6,27 @@ import 'dart:convert';
 class DetailsInfoProvide with ChangeNotifier {
   DetailModelEntity goodsInfo = null;
 
-  getGoodsInfo(String id) {
+  bool isLeftClick = true;
+  bool isRightClick = false;
+
+  getGoodsInfo(String id) async {
     var formData = {'goodId': id};
     request('getGoodDetailById', formData: formData).then((val) {
       var responseData = json.decode(val.toString());
-      goodsInfo =  DetailModelEntity.fromJson(responseData);
+      goodsInfo = DetailModelEntity.fromJson(responseData);
 
       notifyListeners();
     });
+  }
+
+  changeLeftOrRight(String changeState) {
+    if (changeState == 'left') {
+      isLeftClick = true;
+      isRightClick = false;
+    } else {
+      isRightClick = true;
+      isLeftClick = false;
+    }
+    notifyListeners();
   }
 }
